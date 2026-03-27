@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _toggleTitle,
-                child: const Text('Cambiar título con setState'),
+                child: const Text('Cambiar título del HomePage'),
               ),
               const SizedBox(height: 8),
               TextButton(
