@@ -43,6 +43,9 @@ class _HomePageState extends State<HomePage> {
           : 'Hola, Flutter';
     });
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Título actualizado')),
+    );
   }
 
   void _changeBackgroundToFroya() {
@@ -52,6 +55,9 @@ class _HomePageState extends State<HomePage> {
       _backgroundImage = _backgroundImages[nextIndex];
     });
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Fondo actualizado')),
+    );
   }
 
   @override
