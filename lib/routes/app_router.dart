@@ -4,6 +4,7 @@ import 'package:desarollo_movil/views/future/future_screen.dart';
 import 'package:desarollo_movil/views/home/home_screen.dart';
 import 'package:desarollo_movil/views/paso_parametros/detalle_screen.dart';
 import 'package:desarollo_movil/views/paso_parametros/paso_parametros_screen.dart';
+import 'package:desarollo_movil/views/timer/timer_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -40,6 +41,11 @@ final GoRouter appRouter = GoRouter(
       path: '/future',
       name: 'future',
       builder: (context, state) => const FutureScreen(),
+    ),
+    GoRoute(
+      path: '/timer',
+      name: 'timer',
+      builder: (context, state) => const TimerScreen(),
     ),
   ],
 );
