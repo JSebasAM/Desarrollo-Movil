@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:desarollo_movil/views/ciclo_vida/ciclo_vida_screen.dart';
+import 'package:desarollo_movil/views/future/future_screen.dart';
 import 'package:desarollo_movil/views/home/home_screen.dart';
 import 'package:desarollo_movil/views/paso_parametros/detalle_screen.dart';
 import 'package:desarollo_movil/views/paso_parametros/paso_parametros_screen.dart';
@@ -34,6 +35,11 @@ final GoRouter appRouter = GoRouter(
       path: '/ciclo_vida',
       name: 'ciclo_vida',
       builder: (context, state) => const CicloVidaScreen(),
+    ),
+    GoRoute(
+      path: '/future',
+      name: 'future',
+      builder: (context, state) => const FutureScreen(),
     ),
   ],
 );
