@@ -1,3 +1,5 @@
+import 'package:desarollo_movil/views/future/future_view.dart';
+import 'package:desarollo_movil/views/isolate/isolate_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:desarollo_movil/views/ciclo_vida/ciclo_vida_screen.dart';
 import 'package:desarollo_movil/views/home/home_screen.dart';
@@ -35,5 +37,18 @@ final GoRouter appRouter = GoRouter(
       name: 'ciclo_vida',
       builder: (context, state) => const CicloVidaScreen(),
     ),
+    //!Ruta para el ciclo de vida
+    GoRoute(
+      path: '/ciclo_isolate',
+      name: 'ciclo_isolate',
+      builder: (context, state) => const IsolateView(),
+    ),
+    //!Ruta para el ciclo de vida
+    GoRoute(
+      path: '/ciclo_future',
+      name: 'ciclo_future',
+      builder: (context, state) => const FutureView(),
+    ),
   ],
+  
 );
