@@ -1,3 +1,5 @@
+import 'package:desarollo_movil/views/areasNaturales/areaNaturalListView.dart';
+import 'package:desarollo_movil/views/areasNaturales/detallesAreasNaturales.dart';
 import 'package:go_router/go_router.dart';
 import 'package:desarollo_movil/views/ciclo_vida/ciclo_vida_screen.dart';
 import 'package:desarollo_movil/views/future/future_screen.dart';
@@ -52,6 +54,20 @@ final GoRouter appRouter = GoRouter(
       path: '/isolate',
       name: 'isolate',
       builder: (context, state) => const IsolateScreen(),
+    ),
+    //!Ruta para el listado de áreas naturales
+    GoRoute(
+      path: '/area-natural',
+      builder: (context, state) => const Areanaturallistview(),
+    ),
+    //!Ruta para el detalle con parámetros
+    GoRoute(
+      path:
+          '/area-natural/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return Detallesareasnaturales(id: int.parse(id));
+      },
     ),
   ],
 );

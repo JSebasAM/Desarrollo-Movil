@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/custom_drawer.dart';
 
 class HomeCardItem {
@@ -20,33 +21,46 @@ class HomeScreen extends StatelessWidget {
 
   static const List<HomeCardItem> _defaultCards = [
     HomeCardItem(
-      title: 'Informacion General de Colombia',
+      title: 'Áreas Naturales Protegidas',
       description:
-          'Conoce capital, area, poblacion, idiomas y datos principales del pais.',
-      buttonLabel: 'Ver pais',
+          'Descubre las áreas naturales protegidas y reservas ecológicas de Colombia.',
+      buttonLabel: 'Explorar',
     ),
     HomeCardItem(
-      title: 'Regiones y Departamentos',
+      title: 'Reservas Indígenas',
       description:
-          'Explora la diversidad geografica de Colombia por region y departamento.',
-      buttonLabel: 'Ver regiones',
+          'Conoce las reservas indígenas, comunidades nativas y su distribución por departamento.',
+      buttonLabel: 'Ver reservas',
     ),
     HomeCardItem(
-      title: 'Cultura y Tradiciones',
+      title: 'Especies Invasivas',
       description:
-          'Descubre costumbres, expresiones y elementos culturales representativos.',
-      buttonLabel: 'Ver cultura',
+          'Identifica especies invasivas, su impacto ambiental y nivel de riesgo en Colombia.',
+      buttonLabel: 'Consultar',
     ),
     HomeCardItem(
-      title: 'Turismo y Naturaleza',
+      title: 'Mapas Temáticos',
       description:
-          'Consulta lugares iconicos y riqueza natural para planear tus rutas.',
-      buttonLabel: 'Ver destinos',
+          'Explora mapas temáticos de Colombia con información geográfica y territorial.',
+      buttonLabel: 'Ver mapas',
     ),
   ];
 
   void _onCardTap(BuildContext context, HomeCardItem item) {
-    // TODO: Agregar navegacion o accion especifica para cada card.
+    switch (item.title) {
+      case 'Áreas Naturales Protegidas':
+        context.push('/area-natural');
+        break;
+      case 'Reservas Indígenas':
+        context.push('/reservas-indigenas');
+        break;
+      case 'Especies Invasivas':
+        context.push('/especies-invasivas');
+        break;
+      case 'Mapas Temáticos':
+        context.push('/mapas');
+        break;
+    }
   }
 
   @override

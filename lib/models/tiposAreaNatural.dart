@@ -11,9 +11,9 @@ class AreaNaturalModel {
 
   factory AreaNaturalModel.fromJson(Map<String, dynamic> json) {
     return AreaNaturalModel(
-      id: json['id'],
-      nombre: json['nombre'],
-      descripcion: json['descripcion'],
+      id: json['id'] ?? 0,
+      nombre: (json['nombre'] ?? json['name'] ?? '').toString(),
+      descripcion: (json['descripcion'] ?? json['description'] ?? '').toString(),
     );
   }
 }
