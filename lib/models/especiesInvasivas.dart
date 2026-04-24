@@ -21,14 +21,14 @@ class EspeciesInvasivasModel {
 
   factory EspeciesInvasivasModel.fromJson(Map<String, dynamic> json) {
     return EspeciesInvasivasModel(
-      id: json['id'],
-      nombre: json['nombre'],
-      nombreCientifico: json['nombre_cientifico'],
-      nombreComun: json['nombre_comun'],
-      impacto: json['impacto'],
-      manage: json['manage'],
-      nivelRiesgo: json['nivel_riesgo'],
-      imagen: json['imagen'] ?? '',
+      id: json['id'] ?? 0,
+      nombre: (json['name'] ?? json['nombre'] ?? '').toString(),
+      nombreCientifico: (json['scientificName'] ?? json['nombre_cientifico'] ?? '').toString(),
+      nombreComun: (json['commonNames'] ?? json['nombre_comun'] ?? '').toString(),
+      impacto: (json['impact'] ?? '').toString(),
+      manage: (json['manage'] ?? '').toString(),
+      nivelRiesgo: json['riskLevel'] ?? json['nivel_riesgo'] ?? 0,
+      imagen: (json['urlImage'] ?? json['imagen'] ?? '').toString(),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:desarollo_movil/views/areasNaturales/areaNaturalListView.dart';
 import 'package:desarollo_movil/views/areasNaturales/detallesAreasNaturales.dart';
+import 'package:desarollo_movil/views/especiesInvasivas/detallesEspeciesInvasivas.dart';
+import 'package:desarollo_movil/views/especiesInvasivas/especiesInvasivasListView.dart';
 import 'package:desarollo_movil/views/mapas/detallesMapas.dart';
 import 'package:desarollo_movil/views/mapas/mapasListView.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,8 @@ import 'package:desarollo_movil/views/ciclo_vida/ciclo_vida_screen.dart';
 import 'package:desarollo_movil/views/future/future_screen.dart';
 import 'package:desarollo_movil/views/home/home_screen.dart';
 import 'package:desarollo_movil/views/isolate/isolate_screen.dart';
+import 'package:desarollo_movil/views/reservasIndigenas/detallesReservasIndigenas.dart';
+import 'package:desarollo_movil/views/reservasIndigenas/reservasIndigenasListView.dart';
 import 'package:desarollo_movil/views/paso_parametros/detalle_screen.dart';
 import 'package:desarollo_movil/views/paso_parametros/paso_parametros_screen.dart';
 import 'package:desarollo_movil/views/timer/timer_screen.dart';
@@ -66,6 +70,14 @@ final GoRouter appRouter = GoRouter(
       path: '/mapas',
       builder: (context, state) => const Mapaslistview(),
     ),
+    GoRoute(
+      path: '/reservas-indigenas',
+      builder: (context, state) => const ReservasIndigenasListView(),
+    ),
+    GoRoute(
+      path: '/especies-invasivas',
+      builder: (context, state) => const EspeciesInvasivasListView(),
+    ),
     //Rutas Detalles
     GoRoute(
       path:
@@ -81,6 +93,20 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return DetallesMapas(id: int.parse(id));
+      },
+    ),
+    GoRoute(
+      path: '/reservas-indigenas/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return DetallesReservasIndigenas(id: int.parse(id));
+      },
+    ),
+    GoRoute(
+      path: '/especies-invasivas/:id',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return DetallesEspeciesInvasivas(id: int.parse(id));
       },
     ),
   ],
