@@ -2,7 +2,6 @@ class MapasModel {
   int id;
   String nombre;
   String descripcion;
-  String departamento;
   String imagen;
   String url;
 
@@ -10,19 +9,17 @@ class MapasModel {
     required this.id,
     required this.nombre,
     required this.descripcion,
-    required this.departamento,
     required this.imagen,
     required this.url,
   });
 
   factory MapasModel.fromJson(Map<String, dynamic> json) {
-    return MapasModel(
-      id: json['id'],
-      nombre: json['nombre'],
-      descripcion: json['descripcion'],
-      departamento: json['departamento'],
-      imagen: json['imagen'] ?? '',
-      url: json['url'] ?? '',
-    );
-  }
+  return MapasModel(
+    id: json['id'].toInt(),
+    nombre: json['name'].toString(),
+    descripcion:  json['description'].toString(),
+    imagen: json['urlImages'][0],
+    url: json['urlSource'].toString(),
+  );
+}
 }
