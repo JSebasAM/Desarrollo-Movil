@@ -29,4 +29,34 @@ class AppTheme {
       ),
     );
   }
+
+  //! tema oscuro, no muy intenso
+  static ThemeData get darkTheme {
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color.fromARGB(255, 29, 23, 202),
+        brightness: Brightness.dark,
+      ),
+      useMaterial3: true,
+      scaffoldBackgroundColor: const Color(0xFF121317),
+      appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Color(0xFF184E3A), // tono oscuro pero suave
+        titleTextStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      drawerTheme: const DrawerThemeData(
+        elevation: 0,
+        backgroundColor: Color(0xFF1F1F1F), // fondo menos intenso que negro
+      ),
+      textTheme: const TextTheme(
+        bodyLarge: TextStyle(color: Colors.white70),
+        bodyMedium: TextStyle(color: Colors.white70),
+      ),
+    );
+  }
 }

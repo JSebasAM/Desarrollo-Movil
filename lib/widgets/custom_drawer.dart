@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../themes/theme_controller.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -100,6 +101,21 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               context.go('/isolate');
               Navigator.pop(context);
+            },
+          ),
+          // Toggle modo oscuro
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: ThemeController.themeMode,
+            builder: (context, mode, child) {
+              final isDark = mode == ThemeMode.dark;
+              return SwitchListTile.adaptive(
+                secondary: const Icon(Icons.dark_mode),
+                title: const Text('Modo oscuro'),
+                value: isDark,
+                onChanged: (v) {
+                  ThemeController.toggle();
+                },
+              );
             },
           ),
         ],
