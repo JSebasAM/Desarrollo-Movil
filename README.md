@@ -1,113 +1,227 @@
-# Desarrollo Movil - Taller Flutter
+# Desarrollo Movil - API Colombia
 
-## Datos
-- **Nombre completo:** Jose Sebastian Arenas Moncada
-- **Codigo:** 230231036
+## Descripcion del proyecto
 
-## Objetivo del taller
-Este taller implementa ejemplos de trabajo en segundo plano en Flutter, separados por capas simples de `services` y `views`:
+Se construyo una aplicación en flutter para consumir la API de colombia y mostrar información de interes de minimo 4 endpoints, manteniendo una estructura organizada en carpetas y un flujo de trabajo claro. se integra `go_router` para la navegación entre vistas, peticiones HTTP con `Future` para evitar bloqueos en la IU mientras se cargan los datos desde el servicio.
 
-1. `Future` con `async/await`.
-2. `Timer` para cronometro.
-3. `Isolate` para tarea pesada CPU-bound.
+## API usada
 
-## Estructura usada
-La app sigue una estructura sencilla y pedagogica:
+Se consume la API publica de Colombia desde la siguiente base:
 
-- `lib/services/`: logica de procesos (Future, Timer, Isolate).
-- `lib/views/`: pantallas por modulo.
-- `lib/widgets/custom_drawer.dart`: menu de navegacion comun.
-- `lib/routes/app_router.dart`: registro de rutas.
+- Base URL: https://api-colombia.com/api/v1
 
-## Cuando usar cada herramienta
+Endpoints seleccionados:
 
-### 1) Future y async/await
-Usar cuando necesitas esperar resultados asincronos (por ejemplo, simulacion de consulta o llamada HTTP) sin bloquear la UI.
+- `CategoryNaturalArea`
+- `IndigenousReservation`
+- `InvasiveSpecie`
+- `Map`
 
-- `Future`: representa un valor que llegara despues.
-- `async/await`: permite escribir flujo asincrono de forma secuencial y legible.
+Ademas de su respectivo `$id` para una vista detallada del item seleccionado
 
-Ejemplo del proyecto:
-- Archivo: `lib/services/future_service.dart`
-- Vista: `lib/views/future/future_screen.dart`
+## Ejemplos de respuesta JSON
 
-### 2) Timer
-Usar cuando necesitas eventos repetidos por intervalo (cronometro, cuenta regresiva, polling controlado).
+### 1. CategoryNaturalArea
 
-- `Timer.periodic`: ejecuta una accion cada intervalo.
-- Importante: cancelar timer en `pausar`, `reiniciar` y `dispose` para liberar recursos.
+```json
+{
+  "id": 1,
+  "name": "Área Natural Única",
+  "description": "Área geográfica que, por poseer condiciones especiales de flora o gea es un escenario natural raro.",
+  "naturalAreas": null
+}
+```
 
-Ejemplo del proyecto:
-- Archivo: `lib/services/timer_service.dart`
-- Vista: `lib/views/timer/timer_screen.dart`
+### 2. IndigenousReservation
 
-### 3) Isolate
-Usar para tareas pesadas de CPU que podrian congelar la interfaz si se ejecutan en el hilo principal.
+```json
+{
+  "id": 1,
+  "name": "Pared Y Parecito",
+  "code": "10301",
+  "procedureType": "LEGALIZACIÓN DECRETO 1071",
+  "administrativeActType": "RESOLUCIÓN",
+  "administrativeActNumber": 18,
+  "administrativeActDate": "2003-04-10T00:00:00Z",
+  "nativeCommunity": {
+    "id": 16,
+    "name": "Embera",
+    "description": "Pueblo amerindio que habita en zonas del Pacífico y regiones cercanas.",
+    "languages": "Emberá",
+    "images": ["https://.../16-embera.jpg"]
+  }
+}
+```
 
-- `Isolate.spawn`: ejecuta la tarea en otro isolate.
-- `ReceivePort/SendPort`: comunican resultado y errores.
+### 3. InvasiveSpecie
 
-Ejemplo del proyecto:
-- Archivo: `lib/services/isolate_service.dart`
-- Vista: `lib/views/isolate/isolate_screen.dart`
+```json
+{
+  "id": 1,
+  "name": "Acacia negra, gris",
+  "scientificName": "Acacia decurrens Willd",
+  "commonNames": "acacia ceniza, acacia",
+  "impact": "...",
+  "manage": "...",
+  "riskLevel": 2,
+  "urlImage": "https://.../1- Acacia negra, gris.png"
+}
+```
 
-## Pantallas y flujos
+### 4. Map
 
-### Menu (Custom Drawer)
-Desde el drawer puedes navegar a:
+```json
+{
+  "id": 1,
+  "nombre": "Mapa de Colombia",
+  "descripcion": "Mapa tematico del territorio nacional.",
+  "departamento": "Antioquia",
+  "imagen": "https://.../mapa.png",
+  "url": "https://..."
+}
+```
 
-- Inicio
-- Paso de Parametros
-- Ciclo de Vida
-- Future
-- Timer
-- Isolate
+## Arquitectura y estructura del proyecto
 
-### Flujo de Timer
+El proyecto sigue una estructura sencilla por capas:
 
-1. Entrar a pantalla `Timer`.
-2. Presionar **Iniciar**.
-3. El tiempo se actualiza cada 1 segundo (marcador grande `mm:ss`).
-4. Puedes **Pausar**, **Reanudar** y **Reiniciar**.
-5. Al salir de la vista se ejecuta `dispose()` y se cancela el timer.
+- `lib/models/`: modelos de datos y conversion desde JSON.
+- `lib/services/`: consumo de endpoints HTTP y obtencion de datos.
+- `lib/views/`: vistas del dashboard, listados y detalles.
+- `lib/widgets/`: widgets reutilizables como `BaseView` y `CustomDrawer`.
+- `lib/routes/`: configuracion de rutas con `go_router`.
+- `lib/themes/`: configuracion visual del tema.
 
-### Flujo de Isolate
+### Modelos
 
-1. Entrar a pantalla `Isolate`.
-2. Presionar **Ejecutar proceso pesado**.
-3. Se lanza una suma grande en segundo plano con `Isolate.spawn`.
-4. El resultado vuelve por mensajes y se muestra en la UI.
-5. Durante el proceso, la UI sigue respondiendo (latido/contador visible en pantalla).
+Los modelos transforman la respuesta JSON de la API en objetos Dart.
 
-## Pasos para ejecutar
+- `lib/models/tiposAreaNatural.dart`
+- `lib/models/comunidadNativa.dart`
+- `lib/models/reservaIndigena.dart`
+- `lib/models/especiesInvasivas.dart`
+- `lib/models/mapas.dart`
 
-1. Abrir una terminal en la raiz del proyecto.
-2. Instalar dependencias:
+### Services
+
+Los services encapsulan la logica de peticiones HTTP.
+
+- `lib/services/areaNaturalService.dart`
+- `lib/services/reservasIndigenasService.dart`
+- `lib/services/especiesInvasivasService.dart`
+- `lib/services/mapasService.dart`
+
+### Views
+
+Las vistas muestran la informacion en pantalla con `FutureBuilder`, `ListView.builder` y pantallas de detalle.
+
+- `lib/views/home/home_screen.dart`
+- `lib/views/areasNaturales/areaNaturalListView.dart`
+- `lib/views/areasNaturales/detallesAreasNaturales.dart`
+- `lib/views/reservasIndigenas/reservasIndigenasListView.dart`
+- `lib/views/reservasIndigenas/detallesReservasIndigenas.dart`
+- `lib/views/especiesInvasivas/especiesInvasivasListView.dart`
+- `lib/views/especiesInvasivas/detallesEspeciesInvasivas.dart`
+- `lib/views/mapas/mapasListView.dart`
+- `lib/views/mapas/detallesMapas.dart`
+
+### Widgets reutilizables
+
+- `lib/widgets/base_view.dart`: estructura base de cada pantalla con `AppBar` y `Drawer`.
+- `lib/widgets/custom_drawer.dart`: menu lateral de navegacion.
+
+## Rutas implementadas con go_router
+
+Las rutas estan definidas en `lib/routes/app_router.dart`.
+
+### Rutas principales
+
+- `/` -> Dashboard principal
+- `/area-natural` -> Listado de areas naturales
+- `/area-natural/:id` -> Detalle de area natural
+- `/reservas-indigenas` -> Listado de reservas indigenas
+- `/reservas-indigenas/:id` -> Detalle de reserva indigena
+- `/especies-invasivas` -> Listado de especies invasivas
+- `/especies-invasivas/:id` -> Detalle de especie invasiva
+- `/mapas` -> Listado de mapas
+- `/mapas/:id` -> Detalle de mapa
+
+### Parametros enviados
+
+En los listados se navega enviando el `id` del registro seleccionado:
+
+```dart
+context.push('/area-natural/${areaNatural.id}');
+context.push('/reservas-indigenas/${reserva.id}');
+context.push('/especies-invasivas/${especie.id}');
+context.push('/mapas/${mapa.id}');
+```
+
+En las rutas detalle se recupera el parametro con:
+
+```dart
+final id = state.pathParameters['id']!;
+```
+
+## Manejo de estados
+
+La app usa `FutureBuilder` para manejar el ciclo de vida de carga de datos.
+
+Estados implementados:
+
+- **Carga**: `CircularProgressIndicator()` mientras llega la respuesta.
+- **Exito**: renderizado del listado o del detalle cuando `snapshot.hasData`.
+- **Error**: muestra el mensaje con `snapshot.hasError`.
+- **Fallback de datos vacios**: muestra textos como `Sin nombre`, `Sin descripcion`, `Sin departamento` o `Sin dato` cuando algun campo llega vacio.
+
+## Capturas
+
+### Dashboard
+
+![Dashboard](lib/assets/markdown/dashboard.png)
+
+### Listado
+
+![Listado](lib/assets/markdown/listado.png.png)
+
+### Detalle
+
+![Detalle](lib/assets/markdown/detalle.png)
+
+### Manejo de estados
+En caso de que alguna imagen no este disponible o no se cargue correctamente
+
+![Estados](lib/assets/markdown/estados.png)
+
+## Como ejecutar el proyecto
+
+1. Instalar dependencias:
 
 ```bash
 flutter pub get
 ```
 
-3. Seleccionar dispositivo en VS Code:
-
-```bash
-Ctrl + Shift + P
-Flutter: Select Device
-```
-
-4. Ejecutar la aplicacion:
+2. Ejecutar la aplicacion:
 
 ```bash
 flutter run
 ```
 
-## Capturas
+## Variables de entorno
 
-- Captura 1: Pantalla principal
+El proyecto usa `flutter_dotenv` y carga el archivo:
 
-<img src="lib/assets/markdown/img1.jpeg" width="300">
+- `lib/config/.env`
 
-- Captura 2: Cambio de fondo con TextButton y Grid
+Ejemplo:
 
-<img src="lib/assets/markdown/img2.jpeg" width="300">
+```env
+API_URL=https://api-colombia.com/api/v1
+```
 
+## Notas finales
+
+- La app esta organizada por capas simples y separadas.
+- La navegacion principal se controla desde `go_router`.
+- Cada endpoint tiene su listado y su detalle.
+- Los modelos toleran  valores nulos para evitar errores al mapear JSON.
