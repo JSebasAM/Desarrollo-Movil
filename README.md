@@ -1,227 +1,71 @@
-# Desarrollo Movil - API Colombia
+## Desarollo Móvil
 
-## Descripcion del proyecto
+Aplicación Flutter orientada a contenido informativo y navegación por módulos, construida con `go_router`, carga de configuración desde `.env` y control de tema global.
 
-Se construyo una aplicación en flutter para consumir la API de colombia y mostrar información de interes de minimo 4 endpoints, manteniendo una estructura organizada en carpetas y un flujo de trabajo claro. se integra `go_router` para la navegación entre vistas, peticiones HTTP con `Future` para evitar bloqueos en la IU mientras se cargan los datos desde el servicio.
+### Flujo de publicación
 
-## API usada
+El flujo usado para distribuir nuevas versiones es el siguiente:
 
-Se consume la API publica de Colombia desde la siguiente base:
+**Generar APK → App Distribution → Testers → Instalación → Actualización**
 
-- Base URL: https://api-colombia.com/api/v1
+1. Se compila la app en modo release para obtener el APK.
+2. El APK se sube a App Distribution.
+3. Se agregan o actualizan los testers autorizados.
+4. Los testers reciben el acceso e instalan la versión publicada.
+5. Cuando existe una nueva entrega, repiten el proceso con el APK actualizado.
 
-Endpoints seleccionados:
+### Publicación
 
-- `CategoryNaturalArea`
-- `IndigenousReservation`
-- `InvasiveSpecie`
-- `Map`
+Pasos resumidos para replicar el proceso en el equipo:
 
-Ademas de su respectivo `$id` para una vista detallada del item seleccionado
+1. Validar la versión en `pubspec.yaml`.
+2. Ejecutar la compilación release del APK.
+3. Subir el archivo generado al panel de App Distribution.
+4. Verificar la lista de testers y el mensaje de publicación.
+5. Compartir el acceso con el equipo de pruebas.
+6. Confirmar instalación y feedback en el dispositivo.
 
-## Ejemplos de respuesta JSON
-
-### 1. CategoryNaturalArea
-
-```json
-{
-  "id": 1,
-  "name": "Área Natural Única",
-  "description": "Área geográfica que, por poseer condiciones especiales de flora o gea es un escenario natural raro.",
-  "naturalAreas": null
-}
-```
-
-### 2. IndigenousReservation
-
-```json
-{
-  "id": 1,
-  "name": "Pared Y Parecito",
-  "code": "10301",
-  "procedureType": "LEGALIZACIÓN DECRETO 1071",
-  "administrativeActType": "RESOLUCIÓN",
-  "administrativeActNumber": 18,
-  "administrativeActDate": "2003-04-10T00:00:00Z",
-  "nativeCommunity": {
-    "id": 16,
-    "name": "Embera",
-    "description": "Pueblo amerindio que habita en zonas del Pacífico y regiones cercanas.",
-    "languages": "Emberá",
-    "images": ["https://.../16-embera.jpg"]
-  }
-}
-```
-
-### 3. InvasiveSpecie
-
-```json
-{
-  "id": 1,
-  "name": "Acacia negra, gris",
-  "scientificName": "Acacia decurrens Willd",
-  "commonNames": "acacia ceniza, acacia",
-  "impact": "...",
-  "manage": "...",
-  "riskLevel": 2,
-  "urlImage": "https://.../1- Acacia negra, gris.png"
-}
-```
-
-### 4. Map
-
-```json
-{
-  "id": 1,
-  "nombre": "Mapa de Colombia",
-  "descripcion": "Mapa tematico del territorio nacional.",
-  "departamento": "Antioquia",
-  "imagen": "https://.../mapa.png",
-  "url": "https://..."
-}
-```
-
-## Arquitectura y estructura del proyecto
-
-El proyecto sigue una estructura sencilla por capas:
-
-- `lib/models/`: modelos de datos y conversion desde JSON.
-- `lib/services/`: consumo de endpoints HTTP y obtencion de datos.
-- `lib/views/`: vistas del dashboard, listados y detalles.
-- `lib/widgets/`: widgets reutilizables como `BaseView` y `CustomDrawer`.
-- `lib/routes/`: configuracion de rutas con `go_router`.
-- `lib/themes/`: configuracion visual del tema.
-
-### Modelos
-
-Los modelos transforman la respuesta JSON de la API en objetos Dart.
-
-- `lib/models/tiposAreaNatural.dart`
-- `lib/models/comunidadNativa.dart`
-- `lib/models/reservaIndigena.dart`
-- `lib/models/especiesInvasivas.dart`
-- `lib/models/mapas.dart`
-
-### Services
-
-Los services encapsulan la logica de peticiones HTTP.
-
-- `lib/services/areaNaturalService.dart`
-- `lib/services/reservasIndigenasService.dart`
-- `lib/services/especiesInvasivasService.dart`
-- `lib/services/mapasService.dart`
-
-### Views
-
-Las vistas muestran la informacion en pantalla con `FutureBuilder`, `ListView.builder` y pantallas de detalle.
-
-- `lib/views/home/home_screen.dart`
-- `lib/views/areasNaturales/areaNaturalListView.dart`
-- `lib/views/areasNaturales/detallesAreasNaturales.dart`
-- `lib/views/reservasIndigenas/reservasIndigenasListView.dart`
-- `lib/views/reservasIndigenas/detallesReservasIndigenas.dart`
-- `lib/views/especiesInvasivas/especiesInvasivasListView.dart`
-- `lib/views/especiesInvasivas/detallesEspeciesInvasivas.dart`
-- `lib/views/mapas/mapasListView.dart`
-- `lib/views/mapas/detallesMapas.dart`
-
-### Widgets reutilizables
-
-- `lib/widgets/base_view.dart`: estructura base de cada pantalla con `AppBar` y `Drawer`.
-- `lib/widgets/custom_drawer.dart`: menu lateral de navegacion.
-
-## Rutas implementadas con go_router
-
-Las rutas estan definidas en `lib/routes/app_router.dart`.
-
-### Rutas principales
-
-- `/` -> Dashboard principal
-- `/area-natural` -> Listado de areas naturales
-- `/area-natural/:id` -> Detalle de area natural
-- `/reservas-indigenas` -> Listado de reservas indigenas
-- `/reservas-indigenas/:id` -> Detalle de reserva indigena
-- `/especies-invasivas` -> Listado de especies invasivas
-- `/especies-invasivas/:id` -> Detalle de especie invasiva
-- `/mapas` -> Listado de mapas
-- `/mapas/:id` -> Detalle de mapa
-
-### Parametros enviados
-
-En los listados se navega enviando el `id` del registro seleccionado:
-
-```dart
-context.push('/area-natural/${areaNatural.id}');
-context.push('/reservas-indigenas/${reserva.id}');
-context.push('/especies-invasivas/${especie.id}');
-context.push('/mapas/${mapa.id}');
-```
-
-En las rutas detalle se recupera el parametro con:
-
-```dart
-final id = state.pathParameters['id']!;
-```
-
-## Manejo de estados
-
-La app usa `FutureBuilder` para manejar el ciclo de vida de carga de datos.
-
-Estados implementados:
-
-- **Carga**: `CircularProgressIndicator()` mientras llega la respuesta.
-- **Exito**: renderizado del listado o del detalle cuando `snapshot.hasData`.
-- **Error**: muestra el mensaje con `snapshot.hasError`.
-- **Fallback de datos vacios**: muestra textos como `Sin nombre`, `Sin descripcion`, `Sin departamento` o `Sin dato` cuando algun campo llega vacio.
-
-## Capturas
-
-### Dashboard
-
-![Dashboard](lib/assets/markdown/dashboard.png)
-
-### Listado
-
-![Listado](lib/assets/markdown/listado.png.png)
-
-### Detalle
-
-![Detalle](lib/assets/markdown/detalle.png)
-
-### Manejo de estados
-En caso de que alguna imagen no este disponible o no se cargue correctamente
-
-![Estados](lib/assets/markdown/estados.png)
-
-## Como ejecutar el proyecto
-
-1. Instalar dependencias:
+Comando habitual para generar el APK:
 
 ```bash
-flutter pub get
+flutter build apk --release
 ```
 
-2. Ejecutar la aplicacion:
+### Versionado
 
-```bash
-flutter run
+El proyecto usa el formato estándar de Flutter:
+
+`version: 1.1.0+2`
+
+Donde:
+
+1. `1.1.0` representa la versión visible de la app.
+2. `2` es el número de build o compilación.
+3. En cada publicación se recomienda aumentar el build y, si aplica, el número semántico.
+
+Guía de cambios usada para las notas de release:
+
+1. `MAYOR`: cambios incompatibles con versiones anteriores.
+2. `MINOR`: nuevas funcionalidades sin romper compatibilidad.
+3. `PATCH`: correcciones de errores sin romper compatibilidad.
+4. `BUILD`: ajustes menores que no afectan la versión funcional.
+
+Formato sugerido para Release Notes:
+
+```text
+Versión: 1.1.0+2
+
+- Se corrigieron errores de navegación.
+- Se optimizó la carga de datos.
+- Se agregaron mejoras visuales en la pantalla principal.
 ```
 
-## Variables de entorno
+### Qué incluye la app
 
-El proyecto usa `flutter_dotenv` y carga el archivo:
+La estructura del proyecto muestra módulos para:
 
-- `lib/config/.env`
+1. Pantalla principal y navegación por rutas.
+2. Paso de parámetros y detalle de información.
+3. Ciclo de vida, `Future`, `Timer` e `Isolate`.
+4. Listados y detalle de áreas naturales, mapas, reservas indígenas y especies invasivas.
 
-Ejemplo:
-
-```env
-API_URL=https://api-colombia.com/api/v1
-```
-
-## Notas finales
-
-- La app esta organizada por capas simples y separadas.
-- La navegacion principal se controla desde `go_router`.
-- Cada endpoint tiene su listado y su detalle.
-- Los modelos toleran  valores nulos para evitar errores al mapear JSON.
