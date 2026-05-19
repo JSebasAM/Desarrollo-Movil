@@ -4,9 +4,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'themes/app_theme.dart'; // Importar el tema
 import 'themes/theme_controller.dart'; // Controlador global de tema
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized(); // Asegura que Flutter esté inicializado antes de cargar el .env
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (_) {}
   try{
     await dotenv.load(fileName: 'lib/config/.env'); // Carga el archivo .env
   } catch (e) {
