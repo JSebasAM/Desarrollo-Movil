@@ -14,6 +14,7 @@ import 'package:desarollo_movil/views/reservasIndigenas/reservasIndigenasListVie
 import 'package:desarollo_movil/views/paso_parametros/detalle_screen.dart';
 import 'package:desarollo_movil/views/paso_parametros/paso_parametros_screen.dart';
 import 'package:desarollo_movil/views/timer/timer_screen.dart';
+import 'package:desarollo_movil/views/universidades/universidadesListView.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
@@ -77,6 +78,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/especies-invasivas',
       builder: (context, state) => const EspeciesInvasivasListView(),
+    ),
+    GoRoute(
+      path: '/universidades',
+      builder: (context, state) => const UniversidadesListView(),
     ),
     //Rutas Detalles
     GoRoute(

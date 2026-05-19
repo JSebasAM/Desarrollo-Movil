@@ -103,6 +103,14 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.school),
+            title: const Text('Universidades'),
+            onTap: () {
+              context.go('/universidades');
+              Navigator.pop(context);
+            },
+          ),
           // Toggle modo oscuro
           ValueListenableBuilder<ThemeMode>(
             valueListenable: ThemeController.themeMode,
