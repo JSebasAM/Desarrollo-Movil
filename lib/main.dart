@@ -8,10 +8,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized(); // Asegura que Flutter esté inicializado antes de cargar el .env
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (_) {}
   try{
     await dotenv.load(fileName: 'lib/config/.env'); // Carga el archivo .env
   } catch (e) {

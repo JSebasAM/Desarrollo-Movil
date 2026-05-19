@@ -1,6 +1,8 @@
-import 'package:desarollo_movil/services/firebase_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../models/universidad.dart';
+import '../../services/firebase_service.dart';
 import '../../widgets/base_view.dart';
 
 class UniversidadesListView extends StatefulWidget {
@@ -11,42 +13,101 @@ class UniversidadesListView extends StatefulWidget {
 }
 
 class _UniversidadesListViewState extends State<UniversidadesListView> {
-
   final FirebaseService _firebaseService = FirebaseService();
-  late Future<List<Map<String, dynamic>>> _futureUniversidades;
+
+  late Future<List<Universidad>> _futureUniversidades;
 
   @override
   void initState() {
     super.initState();
-    _futureUniversidades = _firebaseService.getUniversidades();
+    _futureUniversidades = _loadUniversidades();
+  }
+
+  Future<List<Universidad>> _loadUniversidades() async {
+    final data = await _firebaseService.getUniversidades();
+    return data.map((json) => Universidad.fromMap(json)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseView(
       title: 'Universidades',
-      body: FutureBuilder<List<Map<String, dynamic>>>(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/universidades/nueva'),
+        child: const Icon(Icons.add),
+      ),
+      body: FutureBuilder<List<Universidad>>(
         future: _futureUniversidades,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+          if (snapshot.hasData) {
+            final universidades = snapshot.data!;
+            return ListView.builder(
+              itemCount: universidades.length,
+              itemBuilder: (context, index) {
+                final universidad = universidades[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            universidad.nombre.isNotEmpty ? universidad.nombre : 'Sin nombre',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            'NIT: ${universidad.nit.isNotEmpty ? universidad.nit : "Sin NIT"}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            universidad.direccion.isNotEmpty
+                                ? universidad.direccion
+                                : 'Sin dirección',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            universidad.telefono.isNotEmpty
+                                ? universidad.telefono
+                                : 'Sin teléfono',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            universidad.paginaWeb.isNotEmpty
+                                ? universidad.paginaWeb
+                                : 'Sin página web',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
           }
+
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
           }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay universidades disponibles.'));
-          }
-          final universidades = snapshot.data!;
-          return ListView.builder(
-            itemCount: universidades.length,
-            itemBuilder: (context, index) {
-              final universidad = universidades[index];
-              return ListTile(
-                title: Text(universidad['nombre'] as String),
-                subtitle: Text(universidad['direccion'] as String),
-              );
-            },
+
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         },
       ),
