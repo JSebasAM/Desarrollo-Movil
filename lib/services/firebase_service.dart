@@ -12,12 +12,10 @@ class FirebaseService {
               toFirestore: (data, _) => data,
             );
   }
-  //Metodo para obtener todas las universidades
   Future<List<Map<String, dynamic>>> getUniversidades() async {
     try {
       final snapshot = await _universidades.get();
-      return snapshot.docs.map((doc) 
-      {
+      return snapshot.docs.map((doc) {
         final data = doc.data();
         data['id'] = doc.id;
         return data;
@@ -26,4 +24,23 @@ class FirebaseService {
       throw Exception('Error al obtener universidades: $e');
     }
   }
+
+  Future<DocumentReference<Map<String, dynamic>>> addUniversidad(
+      Map<String, dynamic> data) async {
+    try {
+      return await _universidades.add(data);
+    } catch (e) {
+      throw Exception('Error al agregar universidad: $e');
+    }
+  }
+
+    Stream<List<Map<String, dynamic>>> streamUniversidades() {
+    return _universidades.snapshots().map((snapshot) => snapshot.docs.map((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
+          return data;
+        }).toList());
+  }
 }
+
+  

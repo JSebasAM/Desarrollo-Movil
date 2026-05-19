@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/universidad.dart';
+import '../../services/firebase_service.dart';
 import '../../widgets/base_view.dart';
 
 class NuevaUniversidadScreen extends StatefulWidget {
@@ -11,11 +13,13 @@ class NuevaUniversidadScreen extends StatefulWidget {
 
 class _NuevaUniversidadScreenState extends State<NuevaUniversidadScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _firebaseService = FirebaseService();
   final _nitController = TextEditingController();
   final _nombreController = TextEditingController();
   final _direccionController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _paginaWebController = TextEditingController();
+  bool _guardando = false;
 
   @override
   void dispose() {
@@ -36,12 +40,33 @@ class _NuevaUniversidadScreenState extends State<NuevaUniversidadScreen> {
     return null;
   }
 
-  void _guardar() {
-    if (_formKey.currentState!.validate()) {
+  Future<void> _guardar() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _guardando = true);
+
+    try {
+      final universidad = Universidad(
+        nit: _nitController.text.trim(),
+        nombre: _nombreController.text.trim(),
+        direccion: _direccionController.text.trim(),
+        telefono: _telefonoController.text.trim(),
+        paginaWeb: _paginaWebController.text.trim(),
+      );
+
+      await _firebaseService.addUniversidad(universidad.toMap());
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Universidad guardada correctamente')),
       );
       Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _guardando = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar: $e')),
+      );
     }
   }
 
@@ -110,8 +135,14 @@ class _NuevaUniversidadScreenState extends State<NuevaUniversidadScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _guardar,
-                  child: const Text('Guardar'),
+                  onPressed: _guardando ? null : _guardar,
+                  child: _guardando
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Guardar'),
                 ),
               ),
             ],
