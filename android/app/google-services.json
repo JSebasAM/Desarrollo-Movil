@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "751779526034",
+    "project_id": "universidades-7390e",
+    "storage_bucket": "universidades-7390e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751779526034:android:16e4a4ea2512641f723d4b",
+        "android_client_info": {
+          "package_name": "com.example.desarollo_movil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzS2_L8T0quNrwpGv2QqgTit1m4y0Yv5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
